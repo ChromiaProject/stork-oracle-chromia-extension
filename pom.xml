@@ -12,12 +12,13 @@
 
     <groupId>net.postchain</groupId>
     <artifactId>stork-oracle-chromia-extension</artifactId>
-    <version>dev</version>
+    <version>${revision}</version>
 
     <name>stork-oracle-chromia-extension</name>
     <description>Extensions to Postchain for integration against Stork services</description>
 
     <properties>
+        <revision>dev</revision>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <kotlin.version>2.0.0</kotlin.version>
