@@ -10,7 +10,7 @@ This extension requires the following node configuration:
 
 ## Configuration when running Master-Sub architecture
 
-To run EIF on Master-Sub architecture you need to add the following properties:
+To run Stork oracle extension on Master-Sub architecture you need to add the following properties:
 
 ```properties
 container.config-providers=net.postchain.stork.config.StorkContainerConfigProvider
