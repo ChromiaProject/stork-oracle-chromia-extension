@@ -35,10 +35,10 @@ entity last_price_oracle_update {
 
 operation __stork_oracle_prices(stork_oracle_prices) {
     create last_price_oracle_update(stork_oracle_prices.asset, stork_oracle_prices.stork_price.timestamp_nanos);
-    on_stork_oracle_prices_update();
+    on_stork_oracle_prices_update(stork_oracle_prices);
 }
 
-@extendable function on_stork_oracle_prices_update() {}
+@extendable function on_stork_oracle_prices_update(stork_oracle_prices) {}
 
 query stork_latest_update_timestamps(): map<text, integer> {
     return map(last_price_oracle_update @* {} (.asset, .timestamp_nanos));
