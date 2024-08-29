@@ -41,7 +41,7 @@ Extend the price update hook:
 }
 ```
 
-The struct `stork_oracle_prices` struct looks as follows:
+The struct `stork_oracle_prices` looks as follows:
 
 ```
 struct stork_oracle_prices {
