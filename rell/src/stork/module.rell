@@ -30,11 +30,16 @@ struct signature {
 
 entity last_price_oracle_update {
     key asset: text;
-    timestamp_nanos: integer;
+    mutable timestamp_nanos: integer;
 }
 
 operation __stork_oracle_prices(stork_oracle_prices) {
-    create last_price_oracle_update(stork_oracle_prices.asset, stork_oracle_prices.stork_price.timestamp_nanos);
+    val last_update = last_price_oracle_update @? { .asset == stork_oracle_prices.asset };
+    if (last_update != null) {
+        last_update.timestamp_nanos = stork_oracle_prices.stork_price.timestamp_nanos;
+    } else {
+        create last_price_oracle_update(stork_oracle_prices.asset, stork_oracle_prices.stork_price.timestamp_nanos);
+    }
     on_stork_oracle_prices_update(stork_oracle_prices);
 }
 

@@ -29,7 +29,7 @@ libs:
     registry: https://gitlab.com/chromaway/core/stork-oracle-chromia-extension
     path: rell/src/stork
     tagOrBranch: {INSERT_VERSION}
-    rid: x"DBDC6C8FEC56DB11086FA833E232529AFEB28C379AA84CC9C5A72F5EBFBA6957"
+    rid: {INSERT_HASH}
     insecure: false
 ```
 

@@ -85,7 +85,7 @@ class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {
                     timestampNanos - System.currentTimeMillis() * NANOS_IN_MILLIS <= MAX_FUTURE_PRICE_TIME
 
     private fun initializeLatestPriceUpdateTimestamps(bctx: BlockEContext) {
-        latestPriceUpdateTimestamps = module.query(bctx, OP_STORK_LATEST_UPDATE_TIMESTAMPS_QUERY, gtv(listOf()))
+        latestPriceUpdateTimestamps = module.query(bctx, OP_STORK_LATEST_UPDATE_TIMESTAMPS_QUERY, gtv(mapOf()))
                 .asDict().mapValues { it.value.asInteger() }.toMutableMap()
     }
 }
