@@ -26,6 +26,8 @@
         <kotlin.code.style>obsolete</kotlin.code.style> <!-- Kotlin obsolete IntelliJ IDEA codestyle -->
 
         <postchain.version>3.17.6</postchain.version>
+        <rell.maven.plugin.version>0.12.2</rell.maven.plugin.version>
+
         <junit.version>5.9.1</junit.version>
         <log4j.version>2.23.1</log4j.version>
         <web3j.version>4.12.0</web3j.version>
@@ -175,6 +177,20 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>net.postchain.rell</groupId>
+                <artifactId>rell-maven-plugin</artifactId>
+                <version>${rell.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>rell compile</id>
+                        <goals>
+                            <goal>rell-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -190,6 +206,13 @@
             <url>https://gitlab.com/api/v4/projects/32294340/packages/maven</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rellmaven</id>
+            <url>https://gitlab.com/api/v4/projects/37668820/packages/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <distributionManagement>
         <repository>

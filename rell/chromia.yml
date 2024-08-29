@@ -1,0 +1,4 @@
+# Just so we can build
+blockchains:
+  stork_library:
+    module: stork

@@ -1,0 +1,45 @@
+
+struct stork_oracle_prices {
+    asset: text;
+    stork_price;
+    publisher_prices: list<publisher_price>;
+}
+
+struct stork_price {
+    price: big_integer;
+    signature;
+    timestamp_nanos: integer;
+    merkle_root: byte_array;
+    type: text;
+    version: text;
+    checksum: byte_array;
+}
+
+struct publisher_price {
+    price: big_integer;
+    signature;
+    timestamp_seconds: integer;
+}
+
+struct signature {
+    signer: byte_array;
+    r: byte_array;
+    s: byte_array;
+    v: byte_array;
+}
+
+entity last_price_oracle_update {
+    key asset: text;
+    timestamp_nanos: integer;
+}
+
+operation __stork_oracle_prices(stork_oracle_prices) {
+    create last_price_oracle_update(stork_oracle_prices.asset, stork_oracle_prices.stork_price.timestamp_nanos);
+    on_stork_oracle_prices_update();
+}
+
+@extendable function on_stork_oracle_prices_update() {}
+
+query stork_latest_update_timestamps(): map<text, integer> {
+    return map(last_price_oracle_update @* {} (.asset, .timestamp_nanos));
+}
