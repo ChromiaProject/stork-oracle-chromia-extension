@@ -45,7 +45,7 @@ deploy-snapshot:
   extends: .setup
   stage: deploy
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "dev"
   script:
     - CURRENT_VERSION=$(git describe --tags --abbrev=0)
     - IFS=. read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
