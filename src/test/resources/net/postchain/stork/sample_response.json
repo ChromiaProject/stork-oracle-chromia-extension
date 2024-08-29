@@ -1,0 +1,95 @@
+{
+  "type": "oracle_prices",
+  "trace_id": "c0ce9aee-16d4-4bda-b407-63cf34b7f3d5",
+  "data": {
+    "BTCUSD": {
+      "timestamp": 1724670047628939995,
+      "asset_id": "BTCUSD",
+      "signature_type": "evm",
+      "trigger": "clock",
+      "price": "63762242334000003000000",
+      "stork_signed_price": {
+        "public_key": "0x0a803F9b1CCe32e2773e0d2e98b37E0775cA5d44",
+        "encoded_asset_id": "0x7404e3d104ea7841c3d9e6fd20adfe99b4ad586bc08d8f3bd3afef894cf184de",
+        "price": "63762242334000003000000",
+        "timestamped_signature": {
+          "signature": {
+            "r": "0x818ff23e01c39db2a9dc54d2dfeed3dc9500d918f1a73e1eddb9154f7664c772",
+            "s": "0x11ec21ff54fd64b07d2dc073a0fb309d43d61d6f1211d98203a2697a65646307",
+            "v": "0x1c"
+          },
+          "timestamp": 1724670047636833955,
+          "msg_hash": "0x97a1be103693599b4f08b378c1b10ff678323228099da98265a876e911931df7"
+        },
+        "publisher_merkle_root": "0xc8df041b89d912426e07bee7797a05d203b408af50e4473daf5c9d24ec474ed4",
+        "calculation_alg": {
+          "type": "median",
+          "version": "v1",
+          "checksum": "9be7e9f9ed459417d96112a7467bd0b27575a2c7847195c68f805b70ce1795ba"
+        }
+      },
+      "signed_prices": [
+        {
+          "publisher_key": "0xf024a9aa110798e5cd0d698fba6523113eaa7fb2",
+          "external_asset_id": "BTCUSD",
+          "signature_type": "evm",
+          "price": "63759079160699999000000",
+          "timestamped_signature": {
+            "signature": {
+              "r": "0x7de24d3e8d14464edccef99828e522fb91057ad361479d9a4a6e0206ee66aa69",
+              "s": "0x3b0c0c412f366555875315fe3dd3769ae4ae0da6c6df1ef36121089a2469065e",
+              "v": "0x1c"
+            },
+            "timestamp": 1724670047628939995,
+            "msg_hash": "0xaab506da4d9e4697ae3886fb49a0fbb865c504ceb471ba25a36b8256bfc878ed"
+          }
+        },
+        {
+          "publisher_key": "0xb91c675e0c0ecfd4c16f97b110376c3c224061d8",
+          "external_asset_id": "BTCUSD",
+          "signature_type": "evm",
+          "price": "63766720746000002000000",
+          "timestamped_signature": {
+            "signature": {
+              "r": "0x5d096a3076a85bf5d8d65681f9ec133bc6032b7ae1900602db395fdd7c2c9dc8",
+              "s": "0x2a23a5d000d082478ab43033f52545eba8c8860052d648fc4427a45b6ba48f42",
+              "v": "0x1c"
+            },
+            "timestamp": 1724670047232000000,
+            "msg_hash": "0x7b6aefc886083fa3a78606b586e0f731756ee1a285874b5909335fc4ca45f44f"
+          }
+        },
+        {
+          "publisher_key": "0xa3c28d4e939ce2927d3b29b7bf53d3aeaab09350",
+          "external_asset_id": "BTCUSD",
+          "signature_type": "evm",
+          "price": "63763509574000005000000",
+          "timestamped_signature": {
+            "signature": {
+              "r": "0xd54d7ab04bd311046b5ee0bebdb63db99755179936c872d94ab79fb89502ecba",
+              "s": "0x62336ca55cf59ebc7f36883e3ead394a5a4e3a198301d6ad367a21f95abdfade",
+              "v": "0x1c"
+            },
+            "timestamp": 1724670047579000000,
+            "msg_hash": "0xb297a588d776fbea6c365711ab80533bdccd7cfc095f20273c2f1eaeaea0d18b"
+          }
+        },
+        {
+          "publisher_key": "0x51aa9e9c781f85a2c0636a835eb80114c4553098",
+          "external_asset_id": "BTCUSD",
+          "signature_type": "evm",
+          "price": "63760975094000002000000",
+          "timestamped_signature": {
+            "signature": {
+              "r": "0x6a8bd357a1b7e42e5db330ae1831016d624e6d73fc50b7e83a4d0dba81589e9e",
+              "s": "0x55643ac0f1b959c1a1c59feaf53ac7d5139912e8ea30dfddbe7286bc634fbf83",
+              "v": "0x1b"
+            },
+            "timestamp": 1724670047579000000,
+            "msg_hash": "0x5fbd640d0bd755a30fc3a4503514ba9f42db82bbf8941421fab9ac64dd4b5b8f"
+          }
+        }
+      ]
+    }
+  }
+}
