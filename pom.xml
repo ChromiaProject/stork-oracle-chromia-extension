@@ -36,7 +36,7 @@
         <gitlab.username>${CI_REGISTRY_USER}</gitlab.username>
         <!--suppress UnresolvedMavenProperty -->
         <gitlab.password>${CI_REGISTRY_PASSWORD}</gitlab.password>
-        <gitlab.registry>registry.gitlab.com/chromaway/core/custom-sql-query-extension</gitlab.registry>
+        <gitlab.registry>registry.gitlab.com/chromaway/core/stork-oracle-chromia-extension</gitlab.registry>
         <docker.cache>/tmp/docker-cache</docker.cache>
         <image.platforms>linux/amd64,linux/arm64</image.platforms>
         <image.name>chromaway/stork-oracle-extension-chromia-subnode</image.name>
@@ -217,6 +217,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.3</version>
                 <configuration>
                     <allowInsecureRegistries>false</allowInsecureRegistries>
                     <from>
