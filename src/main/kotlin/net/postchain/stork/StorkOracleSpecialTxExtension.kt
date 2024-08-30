@@ -69,6 +69,7 @@ class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {
             }
 
             if (!StorkPriceValidator.validateStorkOraclePrices(priceUpdate)) {
+                logger.warn("Validation of stork price update failed")
                 return false
             }
         }

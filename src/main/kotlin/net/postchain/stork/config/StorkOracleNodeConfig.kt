@@ -29,7 +29,7 @@ data class StorkOracleNodeConfig(
 
     fun toEnvironmentKeyValueMap(): Map<String, String> = buildMap {
         put(STORK_URL, url)
-        put(STORK_USERNAME, url)
-        put(STORK_PASSWORD, url)
+        put(STORK_USERNAME, username)
+        put(STORK_PASSWORD, password)
     }
 }

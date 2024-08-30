@@ -45,6 +45,7 @@ deploy-snapshot:
   rules:
     - if: $CI_COMMIT_BRANCH == "dev"
   script:
+    - if $(git rev-parse --is-shallow-repository); then git fetch --unshallow ; fi
     - CURRENT_VERSION=$(git describe --tags --abbrev=0)
     - IFS=. read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
     - SNAPSHOT_VERSION=$MAJOR.$((MINOR + 1)).0-SNAPSHOT
