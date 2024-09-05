@@ -25,7 +25,7 @@
         <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
         <kotlin.code.style>obsolete</kotlin.code.style> <!-- Kotlin obsolete IntelliJ IDEA codestyle -->
 
-        <postchain.version>3.17.9</postchain.version>
+        <postchain.version>3.18.0</postchain.version>
         <rell.maven.plugin.version>0.12.2</rell.maven.plugin.version>
 
         <junit.version>5.9.1</junit.version>
@@ -77,14 +77,7 @@
 
         <dependency>
             <groupId>net.postchain</groupId>
-            <artifactId>postchain-base</artifactId>
-            <!-- Only to avoid multiple versions in docker image! Remove when we find a better way to extend -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mandas</groupId>
-                    <artifactId>docker-client</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>postchain-spi</artifactId>
         </dependency>
 
         <!-- Only to avoid multiple versions in docker image! Remove when we find a better way to extend -->
