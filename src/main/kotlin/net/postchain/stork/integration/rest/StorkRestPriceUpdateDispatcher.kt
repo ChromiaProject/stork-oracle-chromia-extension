@@ -22,6 +22,7 @@ import org.http4k.client.ApacheClient
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
+import org.http4k.core.Status
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters
 import org.http4k.filter.GzipCompressionMode
@@ -37,10 +38,14 @@ class StorkRestPriceUpdateDispatcher(
 ) : Shutdownable {
 
     companion object : KLogging() {
-        const val POLL_INTERVAL_SECONDS = 1L
+        const val FAILED_REQUEST_LIMIT = 5
+
+        val POLL_INTERVAL: Duration = Duration.ofSeconds(1L)
+        val BACK_OFF_TIME: Duration = Duration.ofSeconds(60L)
     }
 
     private val oraclePriceLens = Body.auto<OraclePriceMessage>().toLens()
+    private var consecutiveFailedRequests = 0
 
     private val client = ClientFilters.AcceptGZip(GzipCompressionMode.Streaming())
             .then(ClientFilters.BasicAuth(username, password))
@@ -58,25 +63,35 @@ class StorkRestPriceUpdateDispatcher(
     private val priceUpdateJob: Job = CoroutineScope(Dispatchers.IO).launch(CoroutineName("stork-price-update") + MDCContext()) {
         while (isActive) {
             try {
-                pollPrices()
+                consecutiveFailedRequests = if (pollPrices()) 0 else
+                    minOf(FAILED_REQUEST_LIMIT, consecutiveFailedRequests + 1)
             } catch (e: CancellationException) {
                 break
             } catch (e: Exception) {
                 logger.error("Failed to poll prices from Stork REST API: ${e.message}", e)
+                consecutiveFailedRequests = minOf(FAILED_REQUEST_LIMIT, consecutiveFailedRequests + 1)
             }
-            delay(Duration.ofSeconds(POLL_INTERVAL_SECONDS))
+            delay(
+                    if (consecutiveFailedRequests >= FAILED_REQUEST_LIMIT) BACK_OFF_TIME else POLL_INTERVAL
+            )
         }
     }
 
-    private fun pollPrices() {
+    private fun pollPrices(): Boolean {
         val response = client(Request(Method.GET, "${url}/v1/prices/latest?assets=${assets.joinToString(",")}"))
-        val priceUpdates = StorkOraclePricesMapper.mapMessageToAssetOraclePrices(oraclePriceLens.extract(response))
-        priceUpdates.forEach { priceUpdate ->
-            if (assets.contains(priceUpdate.asset)) {
-                priceUpdateHandler.onPriceUpdate(priceUpdate)
-            } else {
-                logger.error("Received a stork price update for unknown asset ${priceUpdate.asset}. Discarding update.")
+        return if (response.status == Status.OK) {
+            val priceUpdates = StorkOraclePricesMapper.mapMessageToAssetOraclePrices(oraclePriceLens.extract(response))
+            priceUpdates.forEach { priceUpdate ->
+                if (assets.contains(priceUpdate.asset)) {
+                    priceUpdateHandler.onPriceUpdate(priceUpdate)
+                } else {
+                    logger.error("Received a stork price update for unknown asset ${priceUpdate.asset}. Discarding update.")
+                }
             }
+            true
+        } else {
+            logger.error("Got unexpected response with status ${response.status} and payload: ${response.bodyString()}")
+            false
         }
     }
 
