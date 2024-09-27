@@ -11,7 +11,6 @@ import net.postchain.gtv.mapper.GtvObjectMapper
 import net.postchain.gtx.GTXModule
 import net.postchain.gtx.data.OpData
 import net.postchain.gtx.special.GTXSpecialTxExtension
-import net.postchain.stork.integration.StorkOracleEventProcessor
 import java.time.Duration
 
 class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {

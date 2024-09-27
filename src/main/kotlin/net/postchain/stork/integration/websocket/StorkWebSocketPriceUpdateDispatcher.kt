@@ -1,25 +1,28 @@
-package net.postchain.stork.integration
+package net.postchain.stork.integration.websocket
 
 import mu.KLogging
 import net.postchain.core.Shutdownable
-import net.postchain.stork.StorkOraclePrices
-import net.postchain.stork.StorkPriceValidator
+import net.postchain.stork.integration.MessageType
+import net.postchain.stork.integration.OraclePriceMessage
+import net.postchain.stork.integration.PriceUpdateHandler
+import net.postchain.stork.integration.StorkOraclePricesMapper
+import net.postchain.stork.integration.SubscriptionRequestMessage
+import net.postchain.stork.integration.SubscriptionResponseMessage
 import net.postchain.stork.integration.gson.StorkGsonConfig.auto
-import net.postchain.stork.integration.websocket.WebSocketConnectionFactory
 import org.http4k.websocket.WsMessage
-import java.util.concurrent.ConcurrentHashMap
 
-class StorkOracleEventProcessor(
+class StorkWebSocketPriceUpdateDispatcher(
         webSocketConnectionFactory: WebSocketConnectionFactory,
-        private val assets: List<String>
+        private val assets: List<String>,
+        private val priceUpdateHandler: PriceUpdateHandler
 ) : Shutdownable {
 
     companion object : KLogging()
 
-    val assetPriceUpdates = ConcurrentHashMap<String, StorkOraclePrices>()
-
     private var subscribed = false
     private var closed = false
+    private val subscriptionResponseLens = WsMessage.auto<SubscriptionResponseMessage>().toLens()
+    private val oraclePriceLens = WsMessage.auto<OraclePriceMessage>().toLens()
 
     private val webSocketClient = webSocketConnectionFactory.createConnection {
         logger.info("Stork connection established...")
@@ -46,11 +49,12 @@ class StorkOracleEventProcessor(
         )
     }
 
+
     private fun handleMessage(message: WsMessage) {
         try {
             // We expect a confirmation of subscription as the first message
             if (!subscribed) {
-                val subscriptionResponse = WsMessage.auto<SubscriptionResponseMessage>().toLens().extract(message)
+                val subscriptionResponse = subscriptionResponseLens.extract(message)
                 when (val type = subscriptionResponse.type) {
                     MessageType.subscribe -> {
                         logger.info("Received Stork subscription response: $subscriptionResponse")
@@ -71,7 +75,7 @@ class StorkOracleEventProcessor(
                 }
             } else {
                 // Handle oracle price
-                val oraclePrice = WsMessage.auto<OraclePriceMessage>().toLens().extract(message)
+                val oraclePrice = oraclePriceLens.extract(message)
                 if (oraclePrice.type != MessageType.oracle_prices) {
                     logger.error("Received unexpected message type: '${oraclePrice.type}'")
                     return
@@ -80,10 +84,10 @@ class StorkOracleEventProcessor(
                 val assetPrices = StorkOraclePricesMapper.mapMessageToAssetOraclePrices(oraclePrice)
 
                 for (assetPrice in assetPrices) {
-                    if (assets.contains(assetPrice.asset) && StorkPriceValidator.validateStorkOraclePrices(assetPrice)) {
-                        assetPriceUpdates[assetPrice.asset] = assetPrice
+                    if (assets.contains(assetPrice.asset)) {
+                        priceUpdateHandler.onPriceUpdate(assetPrice)
                     } else {
-                        logger.error("Received an invalid stork price update with trace-id: ${oraclePrice.traceId} and data: ${assetPrice}. Discarding update.")
+                        logger.error("Received a stork price update for unknown asset ${assetPrice.asset} with trace-id: ${oraclePrice.traceId}. Discarding update.")
                     }
                 }
             }
