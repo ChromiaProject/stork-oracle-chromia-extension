@@ -2,17 +2,9 @@
 
 This extension requires the following node configuration:
 
-| Name             | Description                                     | Type   | Required           | Default |
-|------------------|-------------------------------------------------|--------|--------------------|---------|
-| `stork.url`      | Stork web socket API URL                        | string | :white_check_mark: |         |
-| `stork.username` | Stork account user name                         | string | :white_check_mark: |         |
-| `stork.password` | Stork account password                          | string | :white_check_mark: |         |
-| `stork.api_type` | Stork API type, can be either REST or WEBSOCKET | string |                    | REST    |
-
-## Configuration when running Master-Sub architecture
-
-To run Stork oracle extension on Master-Sub architecture you need to add the following properties:
-
-```properties
-container.config-providers=net.postchain.stork.config.StorkContainerConfigProvider
-```
+| Name                       | Description                                     | Type   | Required           | Default |
+|----------------------------|-------------------------------------------------|--------|--------------------|---------|
+| `extension.stork.url`      | Stork web socket API URL                        | string | :white_check_mark: |         |
+| `extension.stork.username` | Stork account user name                         | string | :white_check_mark: |         |
+| `extension.stork.password` | Stork account password                          | string | :white_check_mark: |         |
+| `extension.stork.api_type` | Stork API type, can be either REST or WEBSOCKET | string |                    | REST    |
