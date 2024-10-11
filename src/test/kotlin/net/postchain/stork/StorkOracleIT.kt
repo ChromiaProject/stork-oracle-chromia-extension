@@ -40,10 +40,10 @@ class StorkOracleIT : IntegrationTestSetup() {
         }.asServer(Undertow(0)).start()
 
         with(configOverrides) {
-            setProperty("stork.url", "http://localhost:${mockServer.port()}")
-            setProperty("stork.username", "test")
-            setProperty("stork.password", "test")
-            setProperty("stork.api_type", StorkApiType.REST.name)
+            setProperty("extension.stork.url", "http://localhost:${mockServer.port()}")
+            setProperty("extension.stork.username", "test")
+            setProperty("extension.stork.password", "test")
+            setProperty("extension.stork.api_type", StorkApiType.REST.name)
         }
 
         val nodes = createNodes(4, "/net/postchain/stork/stork_it.xml")
@@ -81,10 +81,10 @@ class StorkOracleIT : IntegrationTestSetup() {
         val testWsServer = testApp.asServer(Undertow(0)).start()
 
         with(configOverrides) {
-            setProperty("stork.url", "ws://localhost:${testWsServer.port()}")
-            setProperty("stork.username", "test")
-            setProperty("stork.password", "test")
-            setProperty("stork.api_type", StorkApiType.WEBSOCKET.name)
+            setProperty("extension.stork.url", "ws://localhost:${testWsServer.port()}")
+            setProperty("extension.stork.username", "test")
+            setProperty("extension.stork.password", "test")
+            setProperty("extension.stork.api_type", StorkApiType.WEBSOCKET.name)
         }
 
         val nodes = createNodes(4, "/net/postchain/stork/stork_it.xml")

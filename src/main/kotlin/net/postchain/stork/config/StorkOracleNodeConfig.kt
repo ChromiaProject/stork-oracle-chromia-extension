@@ -14,32 +14,25 @@ data class StorkOracleNodeConfig(
         val apiType: StorkApiType
 ) {
     companion object {
-        private const val STORK_CONFIG_ENV_PREFIX = "POSTCHAIN_STORK_"
-        private const val STORK_URL = "${STORK_CONFIG_ENV_PREFIX}_URL"
-        private const val STORK_USERNAME = "${STORK_CONFIG_ENV_PREFIX}_USERNAME"
-        private const val STORK_PASSWORD = "${STORK_CONFIG_ENV_PREFIX}_PASSWORD"
-        private const val STORK_API_TYPE = "${STORK_CONFIG_ENV_PREFIX}_API_TYPE"
+        private const val STORK_CONFIG_ENV_PREFIX = "POSTCHAIN_EXTENSION_STORK_"
+        private const val STORK_URL = "${STORK_CONFIG_ENV_PREFIX}URL"
+        private const val STORK_USERNAME = "${STORK_CONFIG_ENV_PREFIX}USERNAME"
+        private const val STORK_PASSWORD = "${STORK_CONFIG_ENV_PREFIX}PASSWORD"
+        private const val STORK_API_TYPE = "${STORK_CONFIG_ENV_PREFIX}API_TYPE"
 
         @JvmStatic
         fun fromAppConfig(config: AppConfig): StorkOracleNodeConfig {
             return StorkOracleNodeConfig(
-                    config.getEnvOrString(STORK_URL, "stork.url")
+                    config.getEnvOrString(STORK_URL, "extension.stork.url")
                             ?: throw UserMistake("Stork URL must be configured"),
-                    config.getEnvOrString(STORK_USERNAME, "stork.username")
+                    config.getEnvOrString(STORK_USERNAME, "extension.stork.username")
                             ?: throw UserMistake("Stork username must be configured"),
-                    config.getEnvOrString(STORK_PASSWORD, "stork.password")
+                    config.getEnvOrString(STORK_PASSWORD, "extension.stork.password")
                             ?: throw UserMistake("Stork password must be configured"),
-                    config.getEnvOrString(STORK_API_TYPE, "stork.api_type")?.let {
+                    config.getEnvOrString(STORK_API_TYPE, "extension.stork.api_type")?.let {
                         StorkApiType.valueOf(it)
                     } ?: StorkApiType.REST
             )
         }
-    }
-
-    fun toEnvironmentKeyValueMap(): Map<String, String> = buildMap {
-        put(STORK_URL, url)
-        put(STORK_USERNAME, username)
-        put(STORK_PASSWORD, password)
-        put(STORK_API_TYPE, apiType.name)
     }
 }
