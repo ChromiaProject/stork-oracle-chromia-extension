@@ -76,5 +76,13 @@ struct signature {
 
 The extension already verifies the signatures for you so there is no need to do that in your Rell code.
 
+Prices are represented as `big_integer` with 18 digits after the decimal point. You can use the following library
+function as convenience for converting the price to decimal:
+
+```
+function convert_price_to_decimal(price: big_integer): decimal
+```
+
 ## Custom subnode image
-TODO
+
+Ensure you pick the Stork custom image when leasing your container.
