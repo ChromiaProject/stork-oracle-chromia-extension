@@ -1,3 +1,4 @@
+val units_per_asset = decimal("1" + "0".repeat(18));
 
 struct stork_oracle_prices {
     asset: text;
@@ -47,4 +48,8 @@ operation __stork_oracle_prices(stork_oracle_prices) {
 
 query stork_latest_update_timestamps(): map<text, integer> {
     return map(last_price_oracle_update @* {} (.asset, .timestamp_nanos));
+}
+
+function convert_price_to_decimal(price: big_integer): decimal {
+    return price / units_per_asset;
 }
