@@ -19,6 +19,17 @@ config:
       - ...
 ```
 
+If necessary, Stork public key and publisher public keys can be overridden via configuration.
+
+```yaml
+config:
+  stork:
+    stork_pubkey: x"0a803F9b1CCe32e2773e0d2e98b37E0775cA5d44"
+    publisher_pubkeys: # List ALL publisher keys here if you want to override
+      - x"5c946686b0302be54d85394015a9f9fa0952984e"
+      - ... 
+```
+
 ## Rell
 
 Install the Rell library:
