@@ -9,8 +9,9 @@ import net.postchain.stork.util.calculateStorkMessageHash
 import net.postchain.stork.util.computeMerkleRoot
 import net.postchain.stork.util.verifyEVMSignature
 
-// TODO: How do we verify publisher identity? Up to consumer?
-object StorkPriceValidator : KLogging() {
+class StorkPriceValidator(private val storkPubKey: WrappedByteArray, private val publisherPubKeys: Set<WrappedByteArray>) {
+
+    companion object : KLogging()
 
     fun validateStorkOraclePrices(storkOraclePrices: StorkOraclePrices): Boolean {
         return validateStorkPrice(storkOraclePrices.asset, storkOraclePrices.storkPrice)
@@ -27,7 +28,10 @@ object StorkPriceValidator : KLogging() {
                     storkPrice.merkleRoot,
                     storkPrice.checksum
             )
-
+            if (storkPrice.signature.signer != storkPubKey) {
+                logger.warn("Unexpected Stork price public key: ${storkPrice.signature.signer}, expected: $storkPubKey")
+                return false
+            }
             return if (verifyEVMSignature(
                             storkMessageHash,
                             storkPrice.signature.signer,
@@ -57,6 +61,10 @@ object StorkPriceValidator : KLogging() {
                         publisherPrice.timestampSeconds,
                         publisherPrice.price
                 )
+                if (!publisherPubKeys.contains(publisherPrice.signature.signer)) {
+                    logger.warn("Unknown publisher public key: ${publisherPrice.signature.signer}")
+                    return false
+                }
                 if (!verifyEVMSignature(
                                 publisherMessageHash,
                                 publisherPrice.signature.signer,

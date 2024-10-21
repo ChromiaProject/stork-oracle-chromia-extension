@@ -28,8 +28,10 @@ class StorkOracleSynchronizationInfrastructureExtension(
                 val storkNodeConfig = StorkOracleNodeConfig.fromAppConfig(postchainContext.appConfig)
                 val storkBcConfig = cfg.rawConfig["stork"]?.toObject<StorkOracleBlockchainConfig>()
                         ?: throw UserMistake("Mandatory 'stork' configuration key is missing")
+                val storkPriceValidator = StorkPriceValidator(storkBcConfig.getConfiguredStorkPubKey(), storkBcConfig.getConfiguredPublisherPubKeys())
 
-                val eventProcessor = StorkOracleEventProcessor()
+                val eventProcessor = StorkOracleEventProcessor(storkPriceValidator)
+                storkExt.storkPriceValidator = storkPriceValidator
                 storkExt.storkOracleEventProcessor = eventProcessor
 
                 storkPriceUpdateDispatcher = when (storkNodeConfig.apiType) {

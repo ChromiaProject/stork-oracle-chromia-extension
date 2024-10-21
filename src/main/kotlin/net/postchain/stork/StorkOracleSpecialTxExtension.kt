@@ -23,6 +23,7 @@ class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {
         val MAX_FUTURE_PRICE_TIME = Duration.ofMinutes(1).toNanos()
     }
 
+    lateinit var storkPriceValidator: StorkPriceValidator
     lateinit var storkOracleEventProcessor: StorkOracleEventProcessor
     lateinit var module: GTXModule
     lateinit var latestPriceUpdateTimestamps: MutableMap<String, Long>
@@ -67,7 +68,7 @@ class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {
                 return false
             }
 
-            if (!StorkPriceValidator.validateStorkOraclePrices(priceUpdate)) {
+            if (!storkPriceValidator.validateStorkOraclePrices(priceUpdate)) {
                 logger.warn("Validation of stork price update failed")
                 return false
             }
