@@ -1,7 +1,6 @@
 package net.postchain.stork.util
 
 import net.postchain.base.snapshot.SimpleDigestSystem
-import net.postchain.common.data.EMPTY_HASH
 import net.postchain.common.data.Hash
 import net.postchain.common.data.KECCAK256
 import net.postchain.common.exception.ProgrammerMistake
@@ -65,7 +64,7 @@ fun computeMerkleRoot(hashes: List<Hash>): Hash {
 
     var leaves = hashes
     while (leaves.size > 1) {
-        leaves = if (hashes.size % 2 != 0) leaves + EMPTY_HASH else leaves
+        leaves = if (leaves.size % 2 != 0) leaves + leaves.last() else leaves
 
         val nextLevel = mutableListOf<Hash>()
         for (i in 0 until leaves.size step 2) {
