@@ -76,4 +76,16 @@ class CryptoUtilTest {
                 computeMerkleRoot(btcPrice.signedPrices.map { it.timestampedSignature.msgHash.data }).wrap()
         ).isEqualTo(storkSignedPrice.publisherMerkleRoot)
     }
+
+    @Test
+    fun `Verify merkle root works when extra leaf needs to be added`() {
+        val sampleJson = javaClass.getResource("/net/postchain/stork/uneven_leaf_response.json").readText()
+        val apiPriceMessage = StorkGsonConfig.mapper.fromJson(sampleJson, OraclePriceMessage::class.java)
+
+        val ethPrice = apiPriceMessage.data["ETHUSD"]!!
+        val storkSignedPrice = ethPrice.storkSignedPrice
+        assertThat(
+                computeMerkleRoot(ethPrice.signedPrices.map { it.timestampedSignature.msgHash.data }).wrap()
+        ).isEqualTo(storkSignedPrice.publisherMerkleRoot)
+    }
 }
