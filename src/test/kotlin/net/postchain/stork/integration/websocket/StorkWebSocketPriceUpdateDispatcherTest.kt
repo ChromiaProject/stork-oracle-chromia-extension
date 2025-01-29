@@ -14,6 +14,7 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.testing.testWebsocket
 import org.http4k.websocket.WsHandler
+import org.http4k.websocket.WsResponse
 import org.junit.jupiter.api.Test
 import java.math.BigInteger
 
@@ -65,7 +66,7 @@ class StorkWebSocketPriceUpdateDispatcherTest {
 
     private fun setupPriceUpdateDispatcher(mockStorkWebsocket: MockStorkWebsocket, assets: List<String>, priceUpdateHandler: PriceUpdateHandler) : StorkWebSocketPriceUpdateDispatcher {
         val testApp: WsHandler = { _ ->
-            { socket ->
+            WsResponse { socket ->
                 mockStorkWebsocket.onConnected(socket)
             }
         }
