@@ -23,6 +23,7 @@ import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import org.http4k.websocket.WsHandler
 import org.http4k.websocket.WsMessage
+import org.http4k.websocket.WsResponse
 import org.junit.jupiter.api.Test
 import java.math.BigInteger
 import java.util.concurrent.TimeUnit
@@ -65,7 +66,7 @@ class StorkOracleIT : IntegrationTestSetup() {
     @Test
     fun testStorkOracleWebsocket() {
         val testApp: WsHandler = { _ ->
-            { socket ->
+            WsResponse { socket ->
                 socket.onMessage {
                     val subscriptionRequest = WsMessage.auto<SubscriptionRequestMessage>().toLens().extract(it)
                     val subscriptionResponse = WsMessage.auto<SubscriptionResponseMessage>()
