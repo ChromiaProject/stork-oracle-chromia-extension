@@ -242,7 +242,7 @@
                 <configuration>
                     <allowInsecureRegistries>false</allowInsecureRegistries>
                     <from>
-                        <image>registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.24.0@sha256:3eaa9abcb01018ccbd0405d19a1bbe861613cb6c1f97192345cb1d449e99afc4</image>
+                        <image>registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.25.0@sha256:ea246c242e074cc22a1b5fb85c0cbbbe6c2ef0985cc9795c5d3bfbef966efc37</image>
                     </from>
                     <to>
                         <image>${image.name}</image>
@@ -252,9 +252,6 @@
                         <entrypoint>INHERIT</entrypoint>
                         <creationTime>${git.commit.time}</creationTime>
                         <filesModificationTime>${git.commit.time}</filesModificationTime>
-                        <environment>
-                            <MIGRATE_POSTGRES>true</MIGRATE_POSTGRES>
-                        </environment>
                     </container>
                     <containerizingMode>packaged</containerizingMode>
                 </configuration>
