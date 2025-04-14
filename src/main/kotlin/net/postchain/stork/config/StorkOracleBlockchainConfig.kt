@@ -34,6 +34,7 @@ data class StorkOracleBlockchainConfig(
                 WrappedByteArray.fromHex("16eb47a6bbdf1e1d1e9ac23e6f473f1bcae519c0"),
                 WrappedByteArray.fromHex("0cbc88384406c2c2e5e141505d3a3b1c7c5b69cf"),
                 WrappedByteArray.fromHex("52ec7c4b45b4498fefe8db8cda6778b97576bae0"),
+                WrappedByteArray.fromHex("f2e72022eb19352f488526e835c4b17248aa6c03"),
         )
 
         /**
