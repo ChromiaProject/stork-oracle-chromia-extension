@@ -47,12 +47,10 @@ class OraclePriceUpdateOp(private val latestUpdateTimestamps: MutableMap<String,
     override fun checkCorrectness() {}
 
     override fun apply(ctx: TxEContext): Boolean {
-        data.operations.forEach { opData ->
-            val priceUpdate = StorkOraclePrices.fromGtvArray(opData.args[0] as GtvArray)
+        val priceUpdate = StorkOraclePrices.fromGtvArray(data.args[0] as GtvArray)
 
-            ctx.addAfterAppendHook {
-                latestUpdateTimestamps[priceUpdate.asset] = priceUpdate
-            }
+        ctx.addAfterAppendHook {
+            latestUpdateTimestamps[priceUpdate.asset] = priceUpdate
         }
 
         return true
