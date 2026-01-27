@@ -21,12 +21,12 @@
         <revision>dev</revision>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <kotlin.version>2.0.0</kotlin.version>
+        <kotlin.version>2.3.0</kotlin.version>
         <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
         <kotlin.code.style>obsolete</kotlin.code.style> <!-- Kotlin obsolete IntelliJ IDEA codestyle -->
 
-        <postchain.version>3.47.1</postchain.version>
-        <rell.maven.plugin.version>0.16.1</rell.maven.plugin.version>
+        <postchain.version>3.47.3</postchain.version>
+        <rell.maven.plugin.version>0.16.5</rell.maven.plugin.version>
 
         <junit.version>5.9.1</junit.version>
         <log4j.version>2.23.1</log4j.version>
@@ -242,7 +242,7 @@
                 <configuration>
                     <allowInsecureRegistries>false</allowInsecureRegistries>
                     <from>
-                        <image>registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.35.7@sha256:4a1db8549621ed38043629ec7286c431b6091d2ce349f08eb039405275af19f3</image>
+                        <image>registry.gitlab.com/chromaway/postchain-chromia/chromaway/chromia-subnode:3.36.4@sha256:9b3882e9a2aedd7d70e602182c0d17c9147b2d943d20537345dbec0f25021641</image>
                     </from>
                     <to>
                         <image>${image.name}</image>
@@ -276,6 +276,22 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>ci</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-plugin</artifactId>
+                        <configuration>
+                            <args>
+                                <arg>-Werror</arg>
+                            </args>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>docker-arm</id>
             <activation>
