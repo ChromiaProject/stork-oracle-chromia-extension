@@ -7,15 +7,15 @@ import net.postchain.gtv.mapper.Nullable
 import net.postchain.gtv.mapper.RawGtv
 
 data class StorkOracleBlockchainConfig(
-        @RawGtv
+        @param:RawGtv
         val rawGtv: Gtv,
-        @Name("assets")
+        @param:Name("assets")
         val assets: List<String>,
-        @Name("publisher_pubkeys")
-        @Nullable
+        @param:Name("publisher_pubkeys")
+        @param:Nullable
         val publisherPubKeys: Set<WrappedByteArray>?,
-        @Name("stork_pubkey")
-        @Nullable
+        @param:Name("stork_pubkey")
+        @param:Nullable
         val storkPubKey: WrappedByteArray?
 ) {
         /**
