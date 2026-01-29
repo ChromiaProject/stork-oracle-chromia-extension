@@ -47,9 +47,6 @@
             </entry>
         </dict>
     </entry>
-    <entry key="sync_ext">
-        <array><string>net.postchain.stork.StorkOracleSynchronizationInfrastructureExtension</string></array>
-    </entry>
     <entry key="stork">
         <dict>
             <entry key="assets">
