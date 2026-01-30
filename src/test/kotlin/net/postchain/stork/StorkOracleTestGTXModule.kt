@@ -1,5 +1,7 @@
 package net.postchain.stork
 
+import net.postchain.PostchainContext
+import net.postchain.core.BlockchainConfiguration
 import net.postchain.core.EContext
 import net.postchain.core.TxEContext
 import net.postchain.gtv.Gtv
@@ -8,6 +10,7 @@ import net.postchain.gtv.GtvFactory.gtv
 import net.postchain.gtv.GtvNull
 import net.postchain.gtv.mapper.GtvObjectMapper
 import net.postchain.gtx.GTXOperation
+import net.postchain.gtx.PostchainContextAware
 import net.postchain.gtx.SimpleGTXModule
 import net.postchain.gtx.data.ExtOpData
 import net.postchain.stork.StorkOracleSpecialTxExtension.Companion.OP_STORK_LATEST_UPDATE_TIMESTAMPS_QUERY
@@ -28,7 +31,7 @@ class StorkOracleTestGTXModule : SimpleGTXModule<MutableMap<String, StorkOracleP
                     conf[args.asString()]?.let { GtvObjectMapper.toGtvArray(it) } ?: GtvNull
                 }
         )
-) {
+), PostchainContextAware {
 
     init {
         // We add this provider so that we can get keccak-256 message digest instances
@@ -37,9 +40,15 @@ class StorkOracleTestGTXModule : SimpleGTXModule<MutableMap<String, StorkOracleP
         }
     }
 
+    private lateinit var postchainContext: PostchainContext
+
     override fun initializeDB(ctx: EContext) {}
 
-    override fun getSpecialTxExtensions() = listOf(StorkOracleSpecialTxExtension())
+    override fun initializeContext(configuration: BlockchainConfiguration, postchainContext: PostchainContext, ctx: EContext) {
+        this.postchainContext = postchainContext
+    }
+
+    override fun getSpecialTxExtensions() = listOf(StorkOracleSpecialTxExtension(postchainContext))
 }
 
 class OraclePriceUpdateOp(private val latestUpdateTimestamps: MutableMap<String, StorkOraclePrices>, data: ExtOpData) : GTXOperation(data) {

@@ -3,15 +3,13 @@
 ## Blockchain configuration
 
 You will need to configure which assets to listen for updates to in your blockchain configuration as well as the 
-necessary Stork extensions:
+necessary Stork extension:
 
 ```yaml
 config:
   gtx:
     modules:
       - "net.postchain.stork.StorkOracleGTXModule"
-  sync_ext:
-    - "net.postchain.stork.StorkOracleSynchronizationInfrastructureExtension"
   stork:
     assets:
       - "BTCUSD"

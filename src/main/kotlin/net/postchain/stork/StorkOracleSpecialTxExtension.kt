@@ -1,25 +1,38 @@
 package net.postchain.stork
 
 import mu.KLogging
+import net.postchain.PostchainContext
 import net.postchain.base.SpecialTransactionPosition
 import net.postchain.common.BlockchainRid
+import net.postchain.common.exception.UserMistake
 import net.postchain.core.BlockEContext
+import net.postchain.core.BlockchainProcess
+import net.postchain.core.BlockchainProcessConnectable
+import net.postchain.core.Shutdownable
 import net.postchain.crypto.CryptoSystem
 import net.postchain.gtv.GtvArray
 import net.postchain.gtv.GtvFactory.gtv
 import net.postchain.gtv.mapper.GtvObjectMapper
+import net.postchain.gtv.mapper.toObject
 import net.postchain.gtx.GTXModule
 import net.postchain.gtx.data.OpData
 import net.postchain.gtx.special.GTXSpecialTxExtension
+import net.postchain.stork.config.StorkApiType
+import net.postchain.stork.config.StorkOracleBlockchainConfig
+import net.postchain.stork.config.StorkOracleNodeConfig
+import net.postchain.stork.integration.rest.StorkRestPriceUpdateDispatcher
+import net.postchain.stork.integration.websocket.StorkWebSocketConnectionFactory
+import net.postchain.stork.integration.websocket.StorkWebSocketPriceUpdateDispatcher
 import java.time.Duration
 
-class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {
+class StorkOracleSpecialTxExtension(private val postchainContext: PostchainContext) :
+        GTXSpecialTxExtension, BlockchainProcessConnectable {
 
     companion object : KLogging() {
         const val OP_STORK_ORACLE_PRICES = "__stork_oracle_prices"
         const val OP_STORK_LATEST_UPDATE_TIMESTAMPS_QUERY = "stork_latest_update_timestamps"
 
-        val NANOS_IN_MILLIS = 1_000_000
+        const val NANOS_IN_MILLIS = 1_000_000
         val MAX_FUTURE_PRICE_TIME = Duration.ofMinutes(1).toNanos()
     }
 
@@ -27,6 +40,38 @@ class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {
     lateinit var storkOracleEventProcessor: StorkOracleEventProcessor
     lateinit var module: GTXModule
     lateinit var latestPriceUpdateTimestamps: MutableMap<String, Long>
+
+    private var storkPriceUpdateDispatcher: Shutdownable? = null
+
+    override fun connectProcess(process: BlockchainProcess) {
+        val cfg = process.blockchainEngine.getConfiguration()
+        val storkNodeConfig = StorkOracleNodeConfig.fromAppConfig(postchainContext.appConfig)
+        val storkBcConfig = cfg.rawConfig["stork"]?.toObject<StorkOracleBlockchainConfig>()
+                ?: throw UserMistake("Mandatory 'stork' configuration key is missing")
+        storkPriceValidator = StorkPriceValidator(storkBcConfig.getConfiguredStorkPubKey(), storkBcConfig.getConfiguredPublisherPubKeys())
+
+        storkOracleEventProcessor = StorkOracleEventProcessor(storkPriceValidator)
+
+        storkPriceUpdateDispatcher = when (storkNodeConfig.apiType) {
+            StorkApiType.WEBSOCKET -> StorkWebSocketPriceUpdateDispatcher(
+                    StorkWebSocketConnectionFactory(
+                            storkNodeConfig.url,
+                            storkNodeConfig.username,
+                            storkNodeConfig.password
+                    ),
+                    storkBcConfig.assets,
+                    storkOracleEventProcessor
+            )
+
+            StorkApiType.REST -> StorkRestPriceUpdateDispatcher(
+                    storkNodeConfig.url,
+                    storkNodeConfig.username,
+                    storkNodeConfig.password,
+                    storkBcConfig.assets,
+                    storkOracleEventProcessor
+            )
+        }
+    }
 
     override fun createSpecialOperations(position: SpecialTransactionPosition, bctx: BlockEContext): List<OpData> {
         if (!::latestPriceUpdateTimestamps.isInitialized) initializeLatestPriceUpdateTimestamps(bctx)
@@ -88,5 +133,10 @@ class StorkOracleSpecialTxExtension : GTXSpecialTxExtension {
     private fun initializeLatestPriceUpdateTimestamps(bctx: BlockEContext) {
         latestPriceUpdateTimestamps = module.query(bctx, OP_STORK_LATEST_UPDATE_TIMESTAMPS_QUERY, gtv(mapOf()))
                 .asDict().mapValues { it.value.asInteger() }.toMutableMap()
+    }
+
+    override fun disconnectProcess(process: BlockchainProcess) {
+        storkPriceUpdateDispatcher?.shutdown()
+        storkPriceUpdateDispatcher = null
     }
 }
