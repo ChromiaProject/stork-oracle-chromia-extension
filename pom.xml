@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.chromia</groupId>
         <artifactId>chromia-parent</artifactId>
-        <version>0.2.6</version>
+        <version>0.3.0</version>
     </parent>
 
     <groupId>net.postchain</groupId>
@@ -25,12 +25,12 @@
         <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
         <kotlin.code.style>obsolete</kotlin.code.style> <!-- Kotlin obsolete IntelliJ IDEA codestyle -->
 
-        <postchain.version>3.49.11</postchain.version>
+        <postchain.version>3.49.22</postchain.version>
         <rell.maven.plugin.version>1.2.3</rell.maven.plugin.version>
 
         <junit.version>5.9.1</junit.version>
-        <log4j.version>2.23.1</log4j.version>
-        <web3j.version>4.12.0</web3j.version>
+        <log4j.version>2.26.1</log4j.version>
+        <web3j.version>4.13.0</web3j.version>
 
         <!--suppress UnresolvedMavenProperty -->
         <gitlab.username>${CI_REGISTRY_USER}</gitlab.username>
@@ -238,7 +238,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.3</version>
+                <version>3.5.2</version>
                 <configuration>
                     <allowInsecureRegistries>false</allowInsecureRegistries>
                     <from>
